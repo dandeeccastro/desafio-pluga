@@ -1,11 +1,15 @@
 import './App.css';
 
 import React from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Modal from 'react-bootstrap/Modal';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
 
 import ToolCard from './ToolCard.js';
 import ToolModal from './ToolModal.js';
@@ -14,13 +18,29 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
+      show: false,
+
       tools: [],
+      visited_tools: [],
+      display_tools: [],
+
       tool: {
-        show: false,
         img: "",
         color: "",
         title: "",
+        link: "",
+      }
+    }
+  }
+
+  handleVisited(current_tool) {
+    if (!this.state.visited_tools.includes(current_tool)) {
+      if (this.state.visited_tools.length < 3)
+        this.state.visited_tools.push(current_tool);
+      else {
+        this.state.visited_tools.unshift(current_tool);
+        this.state.visited_tools.pop();
       }
     }
   }
@@ -33,47 +53,70 @@ class App extends React.Component {
 
     api.get("/ferramentas_search.json").then(response => {
       this.setState({
-        tools: response.data
+        tools: response.data,
+        display_tools: response.data
       })
     })
 
   }
 
-  setModal(modal_data) {
+  setModal(data) {
     this.setState({
-      tool:{
-        show: true,
-        img: modal_data.icon,
-        color: modal_data.color,
-        title: modal_data.name,
+      show: true,
+      tool: {
+        img: data.icon,
+        color: data.color,
+        title: data.name,
+        link: data.link,
       }
     });
+
+    this.handleVisited(data);
   }
 
-  render(){
+  setShow(val) {
+    this.setState({ show: val })
+  }
+
+  render() {
     return (
-      <>
-        <Container>
-          <Row sm={4} md={4} xs={4} lg={4} xl={4}>
-            {this.state.tools.map( (tool) => 
-            <Col style={{ margin: "1em 0"}} key={tool.app_id} onClick={() => this.setModal(tool)}>
-              <ToolCard 
+      <Container>
+        <Row>
+          <InputGroup size="lg" onKeyDown={(yay) => console.log(yay)}>
+            <InputGroup.Text>Pesquisa</InputGroup.Text>
+            <FormControl
+              placeholder="Pesquise aqui"
+              aria-label="Pesquise aqui"
+            />
+          </InputGroup>
+        </Row>
+        <Row sm={4} md={4} xs={4} lg={4} xl={4}>
+          {this.state.display_tools.map((tool) =>
+            <Col style={{ margin: "1em 0" }} key={tool.app_id} onClick={() => this.setModal(tool)}>
+              <ToolCard
                 name={tool.name}
                 color={tool.color}
                 icon={tool.icon}
                 link={tool.link}
               />
             </Col>
-            )}
-          </Row>
-        </Container>
-        <ToolModal 
-          show={this.state.tool.show}
-          img={this.state.tool.img}
-          color={this.state.tool.color}
-          title={this.state.tool.title}
-          />
-      </>
+          )}
+        </Row>
+        <Modal
+          show={this.state.show}
+          onHide={() => this.setShow(false)}>
+          <Modal.Header closeButton> </Modal.Header>
+          <Modal.Body>
+            <ToolModal
+              img={this.state.tool.img}
+              color={this.state.tool.color}
+              title={this.state.tool.title}
+              link={this.state.tool.link}
+              visited={this.state.visited_tools}
+            />
+          </Modal.Body>
+        </Modal>
+      </Container>
     );
   }
 }
