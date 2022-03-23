@@ -4,13 +4,12 @@ import { useState, useEffect } from 'react';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 
-import ToolCard from '../components/ToolCard.js';
 import ToolModal from '../components/ToolModal.js';
+import ToolPagination from '../components/ToolPagination.js';
 
 export default function App () {
 
@@ -70,18 +69,9 @@ export default function App () {
           />
         </InputGroup>
       </Row>
-      <Row sm={4} md={4} xs={4} lg={4} xl={4}>
-        {display_tools.map((tool) =>
-          <Col style={{ margin: "1em 0" }} key={tool.app_id} onClick={() => showModal(tool)}>
-            <ToolCard
-              name={tool.name}
-              color={tool.color}
-              icon={tool.icon}
-              link={tool.link}
-            />
-          </Col>
-        )}
-      </Row>
+      <ToolPagination 
+        items={display_tools} 
+        />
       <Modal
         show={show}
         onHide={() => setShow(false)}>
