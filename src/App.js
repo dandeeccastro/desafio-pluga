@@ -1,7 +1,6 @@
 import './App.css';
 
 import React from 'react';
-import { useState } from 'react';
 import axios from 'axios';
 
 import Container from 'react-bootstrap/Container';
@@ -78,11 +77,19 @@ class App extends React.Component {
     this.setState({ show: val })
   }
 
+  filterByName(name) {
+    this.setState({ 
+      display_tools: this.state.tools.filter((x) => { 
+        if (x.name.toLowerCase().includes(name.toLowerCase())) return x; 
+      })
+    });
+  }
+
   render() {
     return (
       <Container>
         <Row>
-          <InputGroup size="lg" onKeyDown={(yay) => console.log(yay)}>
+          <InputGroup size="lg" onChange={(yay) => this.filterByName(yay.target.value)}>
             <InputGroup.Text>Pesquisa</InputGroup.Text>
             <FormControl
               placeholder="Pesquise aqui"
