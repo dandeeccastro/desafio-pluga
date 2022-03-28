@@ -4,13 +4,11 @@ import { useState, useEffect } from 'react';
 
 import ToolCard from './ToolCard.js'
 
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
 import Stack from 'react-bootstrap/Stack';
-import CardGroup from 'react-bootstrap/CardGroup';
 
 function ToolModal(props) {
 
@@ -24,14 +22,17 @@ function ToolModal(props) {
   useEffect( getLastItems, [props.visited] );
 
   return (
-    <Stack gap={3}>
+    <Stack gap={3} className="modalStack">
       <Row>
         <Col sm={6} md={6} lg={6} xl={6}>
-          <Image src={props.img} style={{ backgroundColor: props.color, padding: "1em", margin:"0.25em", borderRadius:"5%"}}/>
+          <Image 
+            src={props.img} 
+            className="toolImage"
+            style={{ backgroundColor: props.color }}/>
         </Col>
         <Col sm={6} md={6} lg={6} xl={6}>
-          <Stack style={{padding:"1em"}}>
-            <h1> {props.title} </h1>
+          <Stack gap={3} className="titleStack">
+            <h1 className="title"> {props.title} </h1>
             <Button size="lg" onClick={() => window.open(props.link)}> Acessar </Button>
           </Stack>
         </Col>

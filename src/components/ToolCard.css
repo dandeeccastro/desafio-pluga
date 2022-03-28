@@ -1,0 +1,10 @@
+.cardImage {
+  padding: 1em;
+  max-height: 15vh;
+}
+
+.cardHeader { 
+  overflow:hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
